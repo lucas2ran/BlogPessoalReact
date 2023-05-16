@@ -1,0 +1,7 @@
+.NavBar {
+    background-color: #000000 !important
+  }
+
+  .navigation:hover {
+    color: blue;
+  }

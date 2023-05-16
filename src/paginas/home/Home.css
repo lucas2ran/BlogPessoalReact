@@ -1,10 +1,17 @@
-.inicio {
-    color: black;
+.texto {
     text-align: center;
-}
-
-.img {
-    height: 300px;
-    display: block;
-    margin: 0 auto;
-}
+  }
+  
+  .alinhamento {
+    display: flex;
+  }
+  
+  .outlinedButton {
+    border-color: #ffffff !important;
+    color: #fff !important;
+  }
+  
+  .outlinedButton:hover {
+    background-color: #ffffff !important;
+    color: #000000 !important
+  }

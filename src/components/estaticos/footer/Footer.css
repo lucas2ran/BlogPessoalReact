@@ -1,0 +1,17 @@
+.footer {
+    background-color: #000000;
+    color: #fff;
+  }
+  
+  .iconesFooter {
+    font-size: 3rem;
+  }
+  
+  .iconeInd {
+    color: #fff;
+  }
+  
+  .iconeInd:hover {
+    color: #262121;
+    cursor: pointer;
+  }
