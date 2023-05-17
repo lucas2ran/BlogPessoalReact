@@ -1,0 +1,25 @@
+.text-decorator-none {
+    text-decoration: none;
+  }
+  .outlinedButtonL {
+    border-color: #c0a5df !important;
+    color: #fcfcfc !important;
+  }
+  
+  .outlinedButtonL:hover {
+    background-color: #5d4775 !important;
+    color: #fdfcfd !important;
+  }
+  
+  .textosL {
+    font-weight: bold !important;
+  }
+  
+  .imagem {
+    background-image: url("https://i.uai.com.br/0en4IaXqIxfvI7RTZZOajjzep5E=/1200x1200/smart/imgsapp2.uai.com.br/app/noticia_133890394703/2022/09/26/302334/super-choque-nos-quadrinhos_1_122548.jpg");
+    background-repeat: no-repeat;
+    width: 100vh;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+  }
