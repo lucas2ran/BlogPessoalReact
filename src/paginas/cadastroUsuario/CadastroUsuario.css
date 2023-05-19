@@ -1,0 +1,8 @@
+.imagem2 {
+    background-image: url("https://i.pinimg.com/originals/44/2d/6a/442d6a51b6ecb3d2e2259c12dd9ffa8f.jpg");
+    background-repeat: no-repeat;
+    width: 100vh;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+  }

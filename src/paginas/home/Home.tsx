@@ -4,10 +4,10 @@ import './Home.css'
 
 function Home() {
     return (
-        <Grid container gap={4} alignItems={'center'} justifyContent={'center'} style={{ backgroundColor: '#3e5997' }}>
+        <Grid container gap={4} alignItems={'center'} justifyContent={'center'} style={{ backgroundColor: '#663399' }}>
             <Grid item xs={4}>
                 <Box p={8} color={'white'} display={'flex'} flexDirection={'column'} alignItems={'center'} gap={2}>
-                    <Typography align='center' fontWeight={900} variant='h3'>Sejam todos muito bem vindos!</Typography>
+                    <Typography className='texto' fontWeight={900} variant='h3'>Sejam todos muito bem vindos!</Typography>
                     <Typography align='center' variant='body1'>Expresse suas idéias e se conecte com os demais...</Typography>
                     <Button variant='outlined' className='outlinedButton'>Ver Postagens</Button>
                 </Box>

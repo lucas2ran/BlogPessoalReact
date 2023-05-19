@@ -24,16 +24,16 @@ function Navbar() {
                         <MenuIcon />
                     </IconButton>
                     <Box style={{ cursor: "pointer" }}>
-                    <Link to="/home" className="textdecoration">
+                    <Link to="/home" style={{textDecoration: "none"}}>
                         <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
                             BlogPessoalShock
                         </Typography>
                     </Link>
                     </Box>
 
-                    <Box className='navigation' display="flex" justifyContent="start">
-                        <Link to="/home" className="text-decorater-none">
-                            <Box mx={2} style={{ cursor: "pointer" }}>
+                    <Box display="flex" justifyContent="start">
+                        <Link to="/home" style={{textDecoration: "none"}}>
+                            <Box className='navigation' mx={2} style={{ cursor: "pointer" }}>
                                 <Typography variant="h6" color="inherit">
                                     Início
                                 </Typography>
@@ -64,7 +64,7 @@ function Navbar() {
                     <Box className='navigation' mx={28} style={{ cursor: "pointer" }}>
                     </Box>
                     <Typography>
-                        <Link to="/login" className="textdecoration">
+                        <Link to="/login" >
                             <Button color="inherit">Logout</Button>
                         </Link>
                     </Typography>
