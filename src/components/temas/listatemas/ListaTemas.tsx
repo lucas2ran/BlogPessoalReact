@@ -10,6 +10,31 @@ function ListaTemas() {
   const [token, setToken] = useLocalStorage('token');
   let navigate = useNavigate();
 
+  async function getTemas() {
+    // alterado a função pra dentro de um try catch, para poder verificar a validade do token do usuário
+    try {
+      // a parte do TRY, fica igual ao que ja tinha antes
+      await busca('/temas', setTemas, {
+        headers: {
+          Authorization: token
+        }
+      })
+    } catch (error: any) {
+      // a parte do catch, vai receber qlquer mensagem de erro que chegue, e caso a mensagem tenha um 403 no seu texto
+      // significa que o token já expirou. Iremos alertar o usuário sobre isso, apagar o token do navegador, e levá-lo para a tela de login
+      if(error.toString().includes('403')) {
+        console.log(error);
+        alert('O seu token expirou, logue novamente')
+        setToken('')
+        navigate('/login')
+      }
+    }
+  }
+  
+  useEffect(() => {
+    getTemas()
+  }, [])
+
   useEffect(() => {
     if (token === '') {
       alert("Você precisa estar logado")

@@ -7,25 +7,29 @@ import './App.css'
 import CadastroUsuario from './paginas/cadastroUsuario/CadastroUsuario';
 import ListaPostagens from './components/postagens/listapostagens/ListaPostagem';
 import ListaTemas from './components/temas/listatemas/ListaTemas';
+import CadastroTema from './components/temas/cadastroTema/CadastroTema';
+import DeletarTema from './components/temas/deletarTema/DeletarTema';
 
 function App() {
-  return(
+  return (
     <BrowserRouter>
-    <Navbar />
-    <div style={{ minHeight: '100vh' }}>
-    <Routes>
-    <Route path="/" element={<Login />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/home" element={<Home />} />
-    <Route path="/cadastroUsuario" element={<CadastroUsuario />} />
-    <Route path='/postagens' element={<ListaPostagens />} />
-            <Route path='/temas' element={<ListaTemas />} />
-    {/* <Route path="/cadastro" element={<CadastroUsuario />} /> */}
-    </Routes>
-    </div>
-    <Footer />
+      <Navbar />
+      <div style={{ minHeight: '100vh' }}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/cadastroUsuario" element={<CadastroUsuario />} />
+          <Route path='/postagens' element={<ListaPostagens />} />
+          <Route path='/temas' element={<ListaTemas />} />
+          <Route path='/cadastrarTema' element={<CadastroTema />} />
+          <Route path='/deletarTema/:id' element={<DeletarTema />} />
+          {/* <Route path="/cadastro" element={<CadastroUsuario />} /> */}
+        </Routes>
+      </div>
+      <Footer />
     </BrowserRouter>
-    )
+  )
 
 }
 
