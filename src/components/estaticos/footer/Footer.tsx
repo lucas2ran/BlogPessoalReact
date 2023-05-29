@@ -13,9 +13,12 @@ function Footer() {
     const token = useSelector<TokenState, TokenState["tokens"]>(
       (state) => state.tokens
     );
+
+    let footerComponent;
   
-    // if ternario
-    return (
+    if(token !== '') {
+      footerComponent = (
+  
       <footer className='footer'>
         <Grid container py={4} alignItems={'center'}>
           <Grid item xs={4} display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
@@ -42,5 +45,12 @@ function Footer() {
       </footer>
     )
   }
+
+  return (
+    <>
+      {footerComponent}
+    </>
+  );
+}
   
   export default Footer
