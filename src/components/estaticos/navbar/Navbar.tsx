@@ -4,18 +4,23 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import './Navbar.css'
 import { Link, useNavigate } from 'react-router-dom';
-import useLocalStorage from 'react-use-localstorage';
+import { useDispatch, useSelector } from 'react-redux';
+import { TokenState } from '../../../store/tokens/TokensReducer';
+import { addToken } from '../../../store/tokens/Actions';
 
 function Navbar() {
-    const [token, setToken] = useLocalStorage('token')
-    let navigate = useNavigate();
+    const token = useSelector<TokenState, TokenState["tokens"]>(
+        (state) => state.tokens
+      );
+    
+      const dispatch = useDispatch()
+      const navigate = useNavigate();
 
     function goLogout(){
-        setToken('')
         alert("Usuário deslogado")
+        dispatch(addToken(''))
         navigate('/login')
     }
 

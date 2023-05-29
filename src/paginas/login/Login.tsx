@@ -2,124 +2,125 @@ import React, { ChangeEvent, useState, useEffect } from 'react';
 import './login.css';
 import { Grid, Box, Typography, TextField, Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
-import useLocalStorage from 'react-use-localstorage';
+
 import { login } from '../../services/Service';
 import UserLogin from '../../models/UserLogin';
+import { useDispatch } from 'react-redux';
+import { addId, addToken } from '../../store/tokens/Actions';
+
 
 function Login() {
-  let navigate = useNavigate();
-  const [token, setToken] = useLocalStorage('token');
-  const [userLogin, setUserLogin] = useState<UserLogin>(
-    {
-      id: 0,
-      usuario: '',
-      senha: '',
-      token: ''
-    }
-  )
+  // cria a variavel para navegação interna pela rota
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
-  function updatedModel(e: ChangeEvent<HTMLInputElement>) {
+  // cria um estado para armazenamento no localStorage do navegador
+  const [token, setToken] = useState('');
 
-    setUserLogin({
+  // cria um estado de controle para o usuário preencher os dados de login
+  const [userLogin, setUsuarioLogin] = useState<UserLogin>({
+    id: 0,
+    nome: '',
+    usuario: '',
+    senha: '',
+    foto: '',
+    token: '',
+  });
+  const [respUserLogin, setRespUserLogin] = useState<UserLogin>({
+    id: 0,
+    nome: '',
+    usuario: '',
+    senha: '',
+    foto: '',
+    token: '',
+  });
+
+  // atualiza os dados do estado acima, e ajuda a formar o JSON para a requisição
+  function updateModel(event: ChangeEvent<HTMLInputElement>) {
+    setUsuarioLogin({
       ...userLogin,
-      [e.target.name]: e.target.value
-    })
+      [event.target.name]: event.target.value,
+    });
   }
+
+  // função que envia o formulário para o backend
+  async function enviar(event: ChangeEvent<HTMLFormElement>) {
+    // previne que o formulario atualize a pagina
+    event.preventDefault();
+    try {
+      await login('/usuarios/logar', userLogin, setRespUserLogin);
+      alert('Usuario logado com sucesso');
+    } catch (error) {
+      alert('Usuário e/ou senha inválidos');
+    }
+  }
+
+  // Efeito que fica de olho no token, e quando chega algo diferente de vazio, navega o usuario pra home
+  useEffect(() => {
+    if (token !== '') {
+      // dispatch(addToken(token))
+      // navigate('/home');
+    }
+  }, [token]);
 
   useEffect(() => {
-    if (token != '') {
-      navigate('/home')
+    if(respUserLogin.token !== ''){
+      dispatch(addToken(respUserLogin.token))
+      dispatch(addId(respUserLogin.id.toString()))
+      navigate('/home');
+      console.log({respUserLogin});
     }
-  }, [token])
-
-  async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
-    e.preventDefault();
-    try {
-      await login('/usuarios/logar', userLogin, setToken)
-
-      alert('Usuário logado com sucesso!')
-    } catch (error) {
-      alert('Dados do usuário inconsistentes. Erro ao logar!')
-    }
-  }
+  }, [respUserLogin.token])
 
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="center">
-      <Grid alignItems="center" xs={6}>
-        <Box paddingX={20}>
-          <form onSubmit={onSubmit}>
-            <Typography
-              variant="h3"
-              gutterBottom
-              color="textPrimary"
-              component="h3"
-              align="center"
-              className="textosL"
-            >
-              Entrar
-            </Typography>
-            <TextField
-              value={userLogin.usuario}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-              id="usuario"
-              label="usuário"
-              variant="outlined"
-              name="usuario"
-              margin="normal"
-              fullWidth
-            />
-            <TextField
-              value={userLogin.senha}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}
-              id="senha"
-              label="senha"
-              variant="outlined"
-              name="senha"
-              margin="normal"
-              type="password"
-              fullWidth
-            />
-            <Box marginTop={2} textAlign="center">
+    <>
+      <Grid container alignItems={'center'}>
+        <Grid item xs={6}>
+          <Box display={'flex'} justifyContent={'center'}>
+            <Grid item xs={6} gap={2} display={'flex'} flexDirection={'column'}>
+              <form onSubmit={enviar}>
+                <Box display={'flex'} flexDirection={'column'} gap={2}>
+                  <Typography align="center" variant="h3">
+                    Login
+                  </Typography>
 
-              <Button
-                className="outlinedButtonL"
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{
-                  borderColor: "white",
-                  backgroundColor: "black",
-                  color: "white",
-                }}
-              >
-                Logar
-              </Button>
+                  <TextField
+                    name="usuario"
+                    label="Nome de usuário"
+                    value={userLogin.usuario}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      updateModel(event)
+                    }
+                  />
 
-            </Box>
-          </form>
-          <Box display="flex" justifyContent="center" marginTop={2}>
-            <Box marginRight={1}>
-              <Typography variant="subtitle1" gutterBottom align="center">
-                Não tem uma conta?
+                  <TextField
+                    name="senha"
+                    label="Senha"
+                    type="password"
+                    value={userLogin.senha}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                      updateModel(event)
+                    }
+                  />
+                  <Button fullWidth variant="contained" type="submit">
+                    Logar
+                  </Button>
+                </Box>
+              </form>
+              <hr />
+              <Typography variant="body1" align="center">
+                Ainda não tem uma conta? <Link to="/cadastro" style={{textDecoration: 'underline'}}>Cadastre-se</Link>
               </Typography>
-            </Box>
-            <Link to='/cadastroUsuario'>
-              <Typography
-                variant="subtitle1"
-                gutterBottom
-                align="center"
-                className="textosL"
-              >
-                {" "}
-                Cadastre-se
-              </Typography>
-            </Link>
+            </Grid>
           </Box>
-        </Box>
+        </Grid>
+        <Grid item xs={6} className="imagemLogin"></Grid>
       </Grid>
-      <Grid xs={6} className="imagem"></Grid>
-    </Grid>
+    </>
   );
 }
 
 export default Login;
+
+
+

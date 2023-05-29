@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
-
-import useLocalStorage from 'react-use-localstorage';
-
 import Postagem from '../../../models/Postagem';
 import { buscaId } from '../../../services/Service';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { TokenState } from '../../../store/tokens/TokensReducer';
 
 function DeletarPostagem() {
-    let navigate = useNavigate();
-    const [token, setToken] = useLocalStorage('token');
+    const navigate = useNavigate()
+    const token = useSelector<TokenState, TokenState["tokens"]>(
+        (state) => state.tokens
+      );
 
     const { id } = useParams<{ id: string }>();
 

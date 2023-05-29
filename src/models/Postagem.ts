@@ -1,4 +1,5 @@
-import Tema from "./Tema";
+
+import { Tema } from "./Tema";
 import User from "./User";
 
 interface Postagem {

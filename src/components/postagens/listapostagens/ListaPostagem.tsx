@@ -2,16 +2,19 @@ import { Box, Grid, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import {Button} from '@material-ui/core'
 import { Link, useNavigate } from 'react-router-dom';
-import useLocalStorage from 'react-use-localstorage';
 import Postagem from '../../../models/Postagem';
 import { busca } from '../../../services/Service';
+import { useSelector } from 'react-redux';
+import { TokenState } from '../../../store/tokens/TokensReducer';
 
 
 function ListaPostagens() {
 
   const [postagens, setPostagens] = useState<Postagem[]>([])
   const navigate = useNavigate();
-  const [token, setToken] = useLocalStorage('token');
+  const token = useSelector<TokenState, TokenState["tokens"]>(
+    (state) => state.tokens 
+  );
   
   function getPostagens() {
     busca('/postagens', setPostagens, {

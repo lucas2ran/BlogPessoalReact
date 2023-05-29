@@ -1,12 +1,19 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import useLocalStorage from 'react-use-localstorage';
 import Tema from '../../../models/Tema';
+import { useSelector, useDispatch } from 'react-redux';
+import { TokenState } from '../../../store/tokens/TokensReducer';
+import { buscaId, deleteId } from '../../../services/Service';
+import { addToken } from '../../../store/tokens/Actions';
 
 
 function DeletarTema() {
-  const [token, setToken] = useLocalStorage('token');
+  const token = useSelector<TokenState, TokenState["tokens"]>(
+    (state) => state.tokens
+  );
+
+  const dispatch = useDispatch()
 
   const navigate = useNavigate();
 
@@ -27,7 +34,7 @@ function DeletarTema() {
     } catch (error: any) {
       if(error.toString().contains('403')) {
         alert('Token expirado, logue novamente')
-        setToken('')
+        dispatch(addToken(''))
         navigate('/login')
       } else {
         alert('O tema não existe')
@@ -79,11 +86,3 @@ function DeletarTema() {
 }
 
 export default DeletarTema
-function buscaId(arg0: string, setTema: React.Dispatch<React.SetStateAction<Tema>>, arg2: { headers: { Authorization: string; }; }) {
-    throw new Error('Function not implemented.');
-}
-
-function deleteId(arg0: string, arg1: { headers: { Authorization: string; }; }) {
-    throw new Error('Function not implemented.');
-}
-

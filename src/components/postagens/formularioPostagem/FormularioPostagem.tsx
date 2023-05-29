@@ -13,26 +13,35 @@ import {
   import React, { ChangeEvent, useEffect, useState } from 'react';
 
   import { useNavigate, useParams } from 'react-router-dom';
-  import useLocalStorage from 'react-use-localstorage';
-  
-  
 import Tema from '../../../models/Tema';
 import Postagem from '../../../models/Postagem';
 import { busca, buscaId, post, put } from '../../../services/Service';
+import User from '../../../models/User';
+import { useDispatch, useSelector } from 'react-redux';
+import { TokenState } from '../../../store/tokens/TokensReducer';
+import { addToken } from '../../../store/tokens/Actions';
   
   function FormularioPostagem() {
     const navigate = useNavigate();
-  
-    const [token, setToken] = useLocalStorage('token');
-  
-    const { id } = useParams<{ id: string }>();
-  
-    const [temas, setTemas] = useState<Tema[]>([]);
-  
-    const [tema, setTema] = useState<Tema>({
-      id: 0,
-      descricao: '',
-    });
+
+  const token = useSelector<TokenState, TokenState["tokens"]>(
+    (state) => state.tokens
+  );
+  const userId = useSelector<TokenState, TokenState["id"]>(
+    (state) => state.id
+  );
+
+  const dispatch = useDispatch()
+
+  const { id } = useParams<{ id: string }>();
+
+  const [temas, setTemas] = useState<Tema[]>([]);
+
+  const [tema, setTema] = useState<Tema>({
+    id: 0,
+    descricao: '',
+    postagem: null
+  });
   
     const [postagem, setPostagem] = useState<Postagem>({
       id: 0,
@@ -41,6 +50,16 @@ import { busca, buscaId, post, put } from '../../../services/Service';
       data: '',
       tema: null,
     });
+
+    const [user, setUser] = useState<User>({
+      id: +userId,
+      foto: '',
+      nome: '',
+      usuario: '',
+      senha: '',
+      postagem: null
+    })
+  
   
     useEffect(() => {
       if(token === ''){ 
@@ -59,7 +78,7 @@ import { busca, buscaId, post, put } from '../../../services/Service';
       } catch (error: any) {
         if (error.toString().contains('403')) {
           alert('Token expirado, logue novamente');
-          setToken('');
+          dispatch(addToken(''))
           navigate('/login');
         }
       }
