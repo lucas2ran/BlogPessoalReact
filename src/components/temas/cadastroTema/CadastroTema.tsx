@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { buscaId, put, post } from '../../../services/Service';
 import { TokenState } from '../../../store/tokens/TokensReducer';
 import { Tema } from '../../../models/Tema';
+import { toast } from 'react-toastify';
 
 
 function CadastrarTema() {
@@ -43,7 +44,16 @@ function CadastrarTema() {
 
   useEffect(() => {
     if (token === '') {
-      alert('Ta tirando né??? sem token não rola')
+      toast.error("Você precisa estar logado", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+        progress: undefined,
+      });
       navigate('/login')
     }
   }, [])
@@ -66,10 +76,19 @@ function CadastrarTema() {
             Authorization: token,
           },
         });
-        alert('Atualizooooou');
+        toast.success("Tema atualizado com sucesso", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "colored",
+          progress: undefined,
+        });
         back();
       } catch (error) {
-        alert('Num foi.. =/');
+        alert('Não foi dessa vez.');
       }
     } else {
       try {
@@ -78,10 +97,19 @@ function CadastrarTema() {
             Authorization: token,
           },
         });
-        alert('Fooooooi');
+        toast.success("Tema atualizado com secesso", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "colored",
+          progress: undefined,
+        });
         back();
       } catch (error) {
-        alert('Num foi.. =/');
+        alert('Não foi dessa vez.');
       }
     }
   }

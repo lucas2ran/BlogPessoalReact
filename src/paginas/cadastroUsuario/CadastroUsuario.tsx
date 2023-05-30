@@ -1,143 +1,111 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import './CadastroUsuario.css';
-import { Grid, Box, Typography, TextField, Button } from '@mui/material';
-import  User  from '../../models/User';
-import { cadastroUsuario } from '../../services/Service';
+import React , {useState, useEffect, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import User from '../../models/User';
+import { Grid,  Typography, Button, TextField } from '@material-ui/core';
+import {Box} from '@mui/material';
+import { Link } from 'react-router-dom';
+import './CadastroUsuario.css';
+import { toast } from 'react-toastify';
+import { cadastrarUsuario } from '../../services/Service';
 
 function CadastroUsuario() {
-  // constante para efetuar a navegação do usuário por dentro da lógica
-  const navigate = useNavigate();
 
-  // state para controlar o formulário enquanto o usuário preenche o mesmo
-  const [User, setUsuario] = useState<User>({
-    id: 0,
-    nome: '',
-    usuario: '',
-    foto: '',
-    senha: '',
-  });
+    let navigate = useNavigate();
+    const [confirmarSenha,setConfirmarSenha] = useState<String>("")
+    const [user, setUser] = useState<User>(
+        {
+            id: 0,
+            nome: '',
+            usuario: '',
+            senha: '',
+            foto: ''
+        })
 
-  // state que vai receber a resposta do backend, para verificar se veio tudo ok
-  const [UserResp, setUsuarioResp] = useState<User>({
-    id: 0,
-    nome: '',
-    usuario: '',
-    foto: '',
-    senha: '',
-  });
+    const [userResult, setUserResult] = useState<User>(
+        {
+            id: 0,
+            nome: '',
+            usuario: '',
+            senha: '',
+            foto: ''
+        })
 
-  // state para armazenar o campo de confirmação de senha, e fazer a checagem com a senha do usuário
-  const [confirmarSenha, setConfirmarSenha] = useState<string>('');
+    useEffect(() => {
+        if (userResult.id != 0) {
+            navigate("/login")
+        }
+    }, [userResult])
 
-  // função para atualizar o estado do confirmar senha
-  function confirmSenha(event: ChangeEvent<HTMLInputElement>) {
-    setConfirmarSenha(event.target.value);
-  }
 
-  // função para atualizar o estado de controle do formulário de usuário, automatizada para todos os campos
-  function updateModel(event: ChangeEvent<HTMLInputElement>) {
-    setUsuario({
-      ...User,
-      [event.target.name]: event.target.value
-    });
-  }
-
-  // função de disparo da requisição para o backend, é bom deixar ela como assincrona
-  async function cadastrar(event: ChangeEvent<HTMLFormElement>) {
-    event.preventDefault();
-    // verificar se os campos de senha e confirmar senha são iguais, e com no minimo 8 caracteres
-    if (User.senha === confirmarSenha && User.senha.length >= 8) {
-      // caso passe pelo IF, vai executar a tentativa de cadastro, e dar o alerta de sucesso
-      try {
-        await cadastroUsuario('/usuarios/cadastrar', User, setUsuarioResp);
-        alert('Usuário cadastrado com sucesso')
-      } catch (error) {
-        // se der erro no cadastro, por exemplo por e-mail repetido, vai cair nessa msg de erro
-        alert('Falha ao cadastrar o usuário, verifique os campos');
-      }
-    } else {
-      // aqui é a mensagem de erro para o caso dos campos de senha estarem diferentes, vai avisar, e apagar os dois campos
-      alert('Os campos de Senha e Confirmar Senha estão diferentes');
-      setUsuario({ ...User, senha: '' });
-      setConfirmarSenha('')
+    function confirmarSenhaHandle(e: ChangeEvent<HTMLInputElement>){
+        setConfirmarSenha(e.target.value)
     }
-  }
 
-  // controle de efeito, para levar a pessoa para a tela de login assim que o backend devolver o JSON de cadastro ok
-  useEffect(() => {
-    if (UserResp.id !== 0) {
-      navigate('/login');
+
+    function updatedModel(e: ChangeEvent<HTMLInputElement>) {
+
+        setUser({
+            ...user,
+            [e.target.name]: e.target.value
+        })
+
     }
-  }, [UserResp]);
-
-  // função de navegação para o botão de cancelar
-  // (só fiz essa função pq se eu usasse o Link no botão, quebrava o meu layout, ela não é necessária, da pra fazer com Link mesmo)
-  function voltar(){
-    navigate('/login')
-  }
-
-  return (
-    <>
-      <Grid container alignItems={'center'}>
-        <Grid item xs={6} className="imagem2"></Grid>
-        <Grid item xs={6}>
-          <Box display={'flex'} justifyContent={'center'}>
-            <Grid xs={8} gap={2} display={'flex'} flexDirection={'column'}>
-              <form onSubmit={cadastrar}>
-                <Box display={'flex'} flexDirection={'column'} gap={2}>
-                  <Typography align="center" variant="h3">
-                    Cadastrar
-                  </Typography>
-                  <TextField
-                    name="nome"
-                    label="Nome completo"
-                    value={User.nome}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => updateModel(event)}
-                  />
-                  <TextField
-                    name="usuario"
-                    label="Endereço de e-mail"
-                    value={User.usuario}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => updateModel(event)}
-                  />
-                  <TextField
-                    name="foto"
-                    label="URL da foto"
-                    value={User.foto}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => updateModel(event)}
-                  />
-                  <TextField
-                    name="senha"
-                    label="Senha"
-                    type="password"
-                    value={User.senha}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => updateModel(event)}
-                  />
-                  <TextField
-                    name="confirmarSenha"
-                    label="Confirmar senha"
-                    type="password"
-                    value={confirmarSenha}
-                    onChange={(event: ChangeEvent<HTMLInputElement>) => confirmSenha(event)}
-                  />
-
-                  <Box display={'flex'} gap={5}>
-                    <Button fullWidth variant="contained" color="error" onClick={voltar}>
-                      Cancelar
-                    </Button>
-                    <Button fullWidth variant="contained" color="primary" type="submit">
-                      Cadastrar
-                    </Button>
-                  </Box>
+    async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
+        e.preventDefault()
+        if(confirmarSenha == user.senha){
+        cadastrarUsuario(`/usuarios/cadastrar`, user, setUserResult)
+        toast.success('Usuario cadastrado com sucesso', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            theme: "colored",
+            progress: undefined,
+            });
+        }else{
+            toast.error('Dados inconsistentes. Favor verificar as informações de cadastro.', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                theme: "colored",
+                progress: undefined,
+                });
+        }
+    }
+    return (
+        <Grid container direction='row' justifyContent='center' alignItems='center'>
+            <Grid item xs={6} className='imagem2'></Grid>
+            <Grid item xs={6} alignItems='center'>
+                <Box paddingX={10}>
+                    <form onSubmit={onSubmit}>
+                        <Typography variant='h3' gutterBottom color='textPrimary' component='h3' align='center' className='textos2'>Cadastrar</Typography>
+                        <TextField value={user.nome} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)} id='nome' label='nome' variant='outlined' name='nome' margin='normal' fullWidth />
+                        <TextField value={user.usuario} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}id='usuario' label='usuario' variant='outlined' name='usuario' margin='normal'fullWidth />
+                        <TextField value={user.senha} onChange={(e: ChangeEvent<HTMLInputElement>) => updatedModel(e)}id='senha' label='senha' variant='outlined' name='senha' margin='normal' type='password' fullWidth />
+                        <TextField value={confirmarSenha} onChange={(e: ChangeEvent<HTMLInputElement>) => confirmarSenhaHandle(e)}id='confirmarSenha' label='confirmarSenha' variant='outlined' name='confirmarSenha' margin='normal' type='password' fullWidth />
+                        <Box marginTop={2} textAlign='center'>
+                            <Link to='/login' className='text-decorator-none'>
+                                <Button variant='contained' color='secondary' className='btnCancelar'>
+                                    Cancelar
+                                </Button>
+                            </Link>
+                            <Button type='submit' variant='contained' color='primary'>
+                                    Cadastrar
+                            </Button>
+                        </Box>
+                    </form>
                 </Box>
-              </form>
             </Grid>
-          </Box>
+
+
+
         </Grid>
-      </Grid>
-    </>
-  );
+    );
 }
 
 export default CadastroUsuario;

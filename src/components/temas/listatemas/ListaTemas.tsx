@@ -6,6 +6,7 @@ import { addToken } from '../../../store/tokens/Actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { TokenState } from '../../../store/tokens/TokensReducer';
 import { Tema } from '../../../models/Tema';
+import { toast } from 'react-toastify';
 
 function ListaTemas() {
   const [temas, setTemas] = useState<Tema[]>([])
@@ -30,7 +31,16 @@ function ListaTemas() {
       // significa que o token já expirou. Iremos alertar o usuário sobre isso, apagar o token do navegador, e levá-lo para a tela de login
       if(error.toString().includes('403')) {
         console.log(error);
-        alert('O seu token expirou, logue novamente')
+        toast.error("Você precisa estar logado", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: "colored",
+          progress: undefined,
+        });
         dispatch(addToken(''))
         navigate('/login')
       }

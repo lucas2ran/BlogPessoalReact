@@ -1,11 +1,12 @@
 import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import Tema from '../../../models/Tema';
 import { useSelector, useDispatch } from 'react-redux';
 import { TokenState } from '../../../store/tokens/TokensReducer';
 import { buscaId, deleteId } from '../../../services/Service';
 import { addToken } from '../../../store/tokens/Actions';
+import { Tema } from '../../../models/Tema';
+import { toast } from 'react-toastify';
 
 
 function DeletarTema() {
@@ -50,7 +51,16 @@ function DeletarTema() {
 
   useEffect(() => {
     if(token === ''){ 
-      alert('Ta tirando né??? sem token não rola')
+      toast.error("Você precisa estar logado", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+        progress: undefined,
+      });
       navigate('/login')
     }
   }, [])
@@ -61,7 +71,16 @@ function DeletarTema() {
         Authorization: token
       }
     })
-    alert('Tema apagado com sucesso')
+    toast.success("Tema deletado com sucesso", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      theme: "colored",
+      progress: undefined,
+    });
     navigate('/temas')
   }
 
